@@ -6,24 +6,30 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class LoginPage {
-    WebDriver driver;
-    public LoginPage()
-    {
-        PageFactory.initElements(driver,this);
-    }
+    public WebDriver ldriver;
 
-    @FindBy(id="Email")
+    @FindBy(xpath = "//input[@id='Email']")
     WebElement email;
 
-    @FindBy(id="Password")
+    @FindBy(xpath = "//input[@id='Password']")
     WebElement password;
 
     @FindBy(xpath = "//button[text()='Log in']")
     WebElement LoginButton;
 
+    @FindBy(xpath = "//*[@id=\"navbarText\"]/ul/li[3]/a")
+    WebElement LogoutButton;
+
+    public LoginPage(WebDriver rdriver)
+    {
+        ldriver=rdriver;
+        PageFactory.initElements(rdriver,this);
+    }
+
     public void enterEmail(String emailAdd)
     {
         email.clear();
+        System.out.println("Text field cleared");
         email.sendKeys(emailAdd);
     }
     public void enterPassord(String pass)
@@ -34,6 +40,10 @@ public class LoginPage {
     public void clickOnLoginButton()
     {
         LoginButton.click();
+    }
+    public void clickOnLogoutButton()
+    {
+        LogoutButton.click();
     }
 
 }
