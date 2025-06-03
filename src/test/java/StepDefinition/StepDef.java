@@ -3,22 +3,32 @@ package StepDefinition;
 import PageObject.AddNewCustomerPage;
 import PageObject.LoginPage;
 import PageObject.SearchCustomerPage;
+import io.cucumber.java.*;
 import io.cucumber.java.en.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.Duration;
 
 
-public class StepDef {
-    public WebDriver driver;
-    public LoginPage loginpage;
-    public SearchCustomerPage searchCustomerPage;
-    public AddNewCustomerPage addNewCustomerPage;
+public class StepDef extends Base{
+
+    @Before
+    public void setup()
+    {
+        WebDriverManager.firefoxdriver().setup();
+        driver=new FirefoxDriver();
+    }
 
     @Given("User launch chrome browser")
     public void user_launch_chrome_browser() {
@@ -102,7 +112,7 @@ public class StepDef {
 
     @When("User enter customer info")
     public void user_enter_customer_info() {
-        addNewCustomerPage.enterEmail("test1@gmail.com");
+        addNewCustomerPage.enterEmail(gererateEmailID()+"@gmail.com");
         addNewCustomerPage.enterPassword("Test1");
         addNewCustomerPage.enterFirstName("Vishal");
         addNewCustomerPage.enterLastName("Sharma");
@@ -120,16 +130,16 @@ public class StepDef {
     @Then("User can see confirmation message {string}")
     public void user_can_see_confirmation_message(String ExpectedConfimationMessage) {
 
-        String Bodytagtext=driver.findElement(By.tagName("Body")).getText();
-        if(Bodytagtext.contains(ExpectedConfimationMessage))
-        {
-            Assert.assertTrue(true);//pass
+            String Bodytagtext=driver.findElement(By.tagName("Body")).getText();
+            if(Bodytagtext.contains(ExpectedConfimationMessage))
+            {
+                Assert.assertTrue(true);//pass
+            }
+            else
+            {
+                Assert.assertTrue(false);//fail
+            }
         }
-        else
-        {
-            Assert.assertTrue(false);//fail
-        }
-    }
 
     /////////////////////SearchEmailAddress//////////////////////////////
     @When("Enter customer email")
@@ -148,6 +158,57 @@ public class StepDef {
         searchCustomerPage.searchCustomerByemail(expectedEmail);
         Assert.assertTrue(searchCustomerPage.searchCustomerByemail(expectedEmail));
 
+    }
+
+    ////////////////////////////Search customer by Name//////////////////////////////////
+
+    @When("Enter customer FirstName")
+    public void enter_customer_first_name() {
+        searchCustomerPage.enterFirstName("Victoria");
+    }
+
+    @When("Enter customer LastName")
+    public void enter_customer_last_name() {
+        searchCustomerPage.enterFirstName("Terces");
+    }
+
+    @Then("User should found the FirstName and LastName in the search table")
+    public void user_should_found_the_first_name_and_last_name_in_the_search_table() {
+        String expectedName= "Victoria Terces";
+        Assert.assertTrue(searchCustomerPage.searchCustomerByName(expectedName));
+    }
+   @After(order =2)//or @sanity or @regression also can be written
+    public void teardown1()
+    {
+        driver.quit();
+    }
+    @After(order =1)
+    public void teardown2(Scenario sc)
+    {
+        System.out.println("Tear Down method executed");
+        if(sc.isFailed()==true)
+        {
+            String Dest="C:\\Users\\visha\\OneDrive\\Desktop";
+            File screenshotfile= ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+            try {
+                FileUtils.copyFile(screenshotfile, new File(Dest));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            };
+
+        }
+        driver.quit();
+    }
+
+    @BeforeStep
+    public void beforestepdemo()
+    {
+        System.out.println("This is before step .....");
+    }
+    @AfterStep
+    public void afterstepdemo()
+    {
+        System.out.println("This is after step .....");
     }
 
 }
