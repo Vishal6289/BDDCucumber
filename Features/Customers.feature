@@ -1,5 +1,5 @@
 Feature: Customer
-  Background: Steps commoon for all scenarios
+  Background: Steps common for all scenarios
     Given User launch chrome browser
     When User opens url "https://admin-demo.nopcommerce.com/login?returnUrl=%2F"
     And User enter email "admin@yourstore.com" and password "admin"
@@ -15,7 +15,7 @@ Feature: Customer
     And Clicks on Save Button
     Then User can see confirmation message "The customer has been added successfully"
     And close the browser
-
+@sanity
     Scenario: Searching user by email Address
       When User clicks on Customer menu
       And clicks on Customers menu item
@@ -23,7 +23,7 @@ Feature: Customer
       When Click on search button
       Then User should found the email in the search table
       And close the browser
-
+@sanity
   Scenario: Searching user by Name
     When User clicks on Customer menu
     And clicks on Customers menu item

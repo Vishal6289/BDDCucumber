@@ -162,10 +162,7 @@ public class AddNewCustomerPage{
         }
 
     }
-    public void clickOnSave()
-    {
-        btnSave.click();
-    }
+    public void clickOnSave() { btnSave.click();}
 
 }
 
